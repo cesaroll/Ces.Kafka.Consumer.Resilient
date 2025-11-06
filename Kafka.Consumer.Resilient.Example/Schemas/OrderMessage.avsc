@@ -1,0 +1,34 @@
+{
+  "type": "record",
+  "name": "OrderMessage",
+  "namespace": "Kafka.Consumer.Resilient.Example.Avro",
+  "doc": "Represents an order message in the system",
+  "fields": [
+    {
+      "name": "OrderId",
+      "type": "string",
+      "doc": "Unique order identifier"
+    },
+    {
+      "name": "CustomerId",
+      "type": "string",
+      "doc": "Customer identifier"
+    },
+    {
+      "name": "Amount",
+      "type": "double",
+      "doc": "Order amount"
+    },
+    {
+      "name": "OrderDate",
+      "type": "string",
+      "doc": "Order date in ISO 8601 format"
+    },
+    {
+      "name": "Status",
+      "type": "string",
+      "doc": "Order status"
+    }
+  ]
+}
+
