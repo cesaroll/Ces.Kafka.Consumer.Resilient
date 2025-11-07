@@ -33,4 +33,10 @@
     <ProjectReference Include="..\Kafka.Consumer.Resilient.Tests.AppHost\Kafka.Consumer.Resilient.Tests.AppHost.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

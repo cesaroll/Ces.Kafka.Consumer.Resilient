@@ -1,5 +1,7 @@
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
 using Aspire.Hosting.Testing;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace Kafka.Consumer.Resilient.Tests.Integration.Fixtures;
@@ -33,8 +35,17 @@ public class KafkaTestFixture : IAsyncLifetime
         var schemaRegistryEndpoint = _app.GetEndpoint("schema-registry", "http");
         SchemaRegistryUrl = schemaRegistryEndpoint.ToString();
 
-        // Wait for services to be fully ready
-        await Task.Delay(TimeSpan.FromSeconds(15));
+        // Wait for resources to be fully ready using Aspire's health checks
+        // This is much faster than a fixed delay
+        var kafkaResource = _app.Services.GetRequiredService<ResourceNotificationService>();
+        await kafkaResource.WaitForResourceAsync("kafka", KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromSeconds(60));
+
+        await kafkaResource.WaitForResourceAsync("schema-registry", KnownResourceStates.Running)
+            .WaitAsync(TimeSpan.FromSeconds(60));
+
+        // Small additional delay to ensure Kafka is accepting connections
+        await Task.Delay(TimeSpan.FromSeconds(2));
 
         Console.WriteLine($"✅ Aspire infrastructure started:");
         Console.WriteLine($"   Kafka: {KafkaBootstrapServers}");
