@@ -82,7 +82,7 @@ produce-avro:
 # Application commands
 run:
 	@echo "🏃 Running example consumer..."
-	dotnet run --project ./Kafka.Consumer.Resilient.Example/Kafka.Consumer.Resilient.Example.csproj
+	dotnet run --project ./Example/Example.csproj
 
 build:
 	@echo "🔨 Building solution..."

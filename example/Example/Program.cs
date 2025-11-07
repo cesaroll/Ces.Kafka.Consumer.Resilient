@@ -1,6 +1,6 @@
 ﻿using Ces.Kafka.Consumer.Resilient.Extensions;
 using Ces.Kafka.Consumer.Resilient.Interfaces;
-using Kafka.Consumer.Resilient.Example;
+using Example;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

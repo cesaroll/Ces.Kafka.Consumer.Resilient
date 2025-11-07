@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "OrderMessage",
-  "namespace": "Kafka.Consumer.Resilient.Example.Avro",
+  "namespace": "Example.Avro",
   "doc": "Represents an order message in the system",
   "fields": [
     {

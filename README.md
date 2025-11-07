@@ -257,7 +257,7 @@ Ces.Kafka.Consumer.Resilient/
 ├── src/
 │   └── Kafka.Consumer.Resilient/      # Main library (NuGet package)
 ├── example/
-│   ├── Kafka.Consumer.Resilient.Example/    # Consumer example
+│   ├── Example/                        # Consumer example
 │   ├── Kafka.Consumer.Resilient.AvroProducer/  # Avro producer example
 │   ├── docker-compose.yml              # Kafka infrastructure
 │   ├── Makefile                        # Development commands
@@ -269,11 +269,7 @@ Ces.Kafka.Consumer.Resilient/
 
 ## Documentation
 
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Technical architecture and design decisions
-- [example/AVRO_GUIDE.md](example/AVRO_GUIDE.md) - Complete guide to working with Avro messages
-- [example/KCAT_GUIDE.md](example/KCAT_GUIDE.md) - **kcat quick reference for testing and debugging**
-- [example/KAFKA_SETUP.md](example/KAFKA_SETUP.md) - Detailed Kafka infrastructure setup
-- [Example README](example/Kafka.Consumer.Resilient.Example/README.md) - Example application guide
+- [Example README](example/README.md) - Example application guide with Makefile commands
 
 
 ## Troubleshooting

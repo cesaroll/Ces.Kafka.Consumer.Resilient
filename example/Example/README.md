@@ -60,7 +60,7 @@ This will automatically:
 
 2. **Run the example**:
    ```bash
-   dotnet run --project Kafka.Consumer.Resilient.Example
+   dotnet run --project Example
    ```
 
 3. **Produce test messages** to the `orders` topic:

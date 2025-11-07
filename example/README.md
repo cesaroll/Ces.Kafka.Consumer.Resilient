@@ -76,7 +76,7 @@ The example simulates three scenarios:
 
 ## Configuration
 
-The consumer is configured via `Kafka.Consumer.Resilient.Example/appsettings.json`:
+The consumer is configured via `Example/appsettings.json`:
 
 ```json
 {
@@ -143,7 +143,7 @@ docker exec kafka kafka-console-consumer \
 
 ```
 example/
-├── Kafka.Consumer.Resilient.Example/
+├── Example/
 │   ├── OrderMessage.cs              # Message model
 │   ├── OrderMessageHandler.cs       # Handler implementation
 │   ├── Program.cs                   # Application entry point

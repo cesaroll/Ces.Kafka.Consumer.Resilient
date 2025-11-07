@@ -2,7 +2,7 @@ using Confluent.Kafka;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 
-namespace Kafka.Consumer.Resilient.Example;
+namespace Example;
 
 /// <summary>
 /// Example Avro producer for testing
