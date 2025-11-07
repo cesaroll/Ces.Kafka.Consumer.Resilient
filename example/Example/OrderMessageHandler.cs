@@ -48,7 +48,7 @@ public class OrderMessageHandler : IMessageHandler<OrderMessage>
                 case 1: // 10% chance of non-retryable error
                     _logger.LogError("Simulating invalid order data for order {OrderId}", message.OrderId);
                     return new ErrorResult(
-                        "Invalid order data: Amount cannot be negative",
+                        "Invalid order data: Simulated error",
                         new ArgumentException("Invalid amount"));
 
                 default: // 80% success
