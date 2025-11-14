@@ -4,6 +4,7 @@ A resilient Kafka consumer library for .NET with automatic retry logic, dead let
 
 ## Features
 
+- ✅ **Auto-start via IHostedService** - Consumer starts automatically with your application
 - ✅ Resilient Kafka consumer with automatic retry logic
 - ✅ JSON file configuration
 - ✅ Configurable retry attempts and delays
@@ -12,13 +13,46 @@ A resilient Kafka consumer library for .NET with automatic retry logic, dead let
 - ✅ **Support for both JSON and Avro messages** (automatic detection and deserialization)
 - ✅ Message keys support for proper partitioning
 - ✅ Dependency injection support
+- ✅ **Compatible with ASP.NET Core and Console apps**
 - ✅ Docker Compose setup with KRaft mode (no Zookeeper)
 - ✅ Multiple concurrent consumers
 - ✅ Comprehensive logging
+- ✅ Graceful shutdown handling
 
 ## Quick Start
 
+```csharp
+// 1. Install the package
+// dotnet add package Ces.Kafka.Consumer.Resilient
+
+// 2. Create your message handler
+public class OrderMessageHandler : IMessageHandler<OrderMessage>
+{
+    public async Task<ConsumerResult> HandleAsync(OrderMessage message, ...)
+    {
+        // Process your message
+        return new SuccessResult();
+    }
+}
+
+// 3. Register and run
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        services.AddResilientKafkaConsumer<OrderMessage, OrderMessageHandler>(
+            context.Configuration.GetSection("KafkaConsumer"));
+    })
+    .Build();
+
+await host.RunAsync(); // Consumer starts automatically!
+```
+
 ## Installation
+
+### Requirements
+
+- **.NET 10.0** or higher
+- Docker (for running Kafka locally)
 
 ### As a NuGet Package
 
@@ -43,8 +77,23 @@ Configure your consumer in `appsettings.json`:
       "TopicName": "orders.error"
     },
     "RetryPolicy": {
-      "Delay": 2000,
-      "RetryAttempts": 3
+      "RetryTopics": [
+        {
+          "TopicName": "orders.retry.1",
+          "Delay": "00:00:30",
+          "RetryAttempts": 3
+        },
+        {
+          "TopicName": "orders.retry.2",
+          "Delay": "00:05:00",
+          "RetryAttempts": 2
+        },
+        {
+          "TopicName": "orders.retry.3",
+          "Delay": "00:30:00",
+          "RetryAttempts": 1
+        }
+      ]
     }
   }
 }
@@ -58,8 +107,11 @@ Configure your consumer in `appsettings.json`:
 - **SchemaRegistryUrl**: Schema Registry URL (leave empty for JSON-only mode)
 - **BootstrapServers**: Kafka broker addresses
 - **Error.TopicName**: Dead letter queue topic for failed messages
-- **RetryPolicy.Delay**: Delay between retries in milliseconds
-- **RetryPolicy.RetryAttempts**: Maximum number of retry attempts
+- **RetryPolicy.RetryTopics**: Array of retry topics with configurable delays and attempts
+  - **TopicName**: Name of the retry topic (required)
+  - **Delay**: Time to wait before retrying in "HH:mm:ss" format (required)
+  - **RetryAttempts**: Number of attempts in this topic before moving to next (default: 1)
+  - **GroupId**: Custom group ID for this retry topic (optional, defaults to main GroupId)
 
 ## Usage
 
@@ -133,7 +185,6 @@ public class OrderMessageHandler : IMessageHandler<OrderMessage>
 
 ```csharp
 using Ces.Kafka.Consumer.Resilient.Extensions;
-using Ces.Kafka.Consumer.Resilient.Interfaces;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -144,12 +195,11 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-// Get the consumer
-var consumer = host.Services.GetRequiredService<IResilientKafkaConsumer<OrderMessage>>();
-
-// Start consuming
-await consumer.StartAsync(CancellationToken.None);
+// Consumer starts automatically! Just run the host
+await host.RunAsync();
 ```
+
+**That's it!** The consumer starts automatically via `IHostedService`. No need to manually call `StartAsync()` or handle shutdown logic.
 
 ## Return Types
 
@@ -243,11 +293,14 @@ The library follows this naming convention:
 
 ## Development
 
-
-### Creating a NuGet Package
+### Building NuGet Package
 
 ```bash
+# Build and create NuGet package
 dotnet pack --configuration Release
+
+# Output will be in:
+# src/Kafka.Consumer.Resilient/bin/Release/Ces.Kafka.Consumer.Resilient.1.2.0.nupkg
 ```
 
 ## Project Structure
@@ -270,6 +323,7 @@ Ces.Kafka.Consumer.Resilient/
 ## Documentation
 
 - [Example README](example/README.md) - Example application guide with Makefile commands
+- [Changelog](CHANGELOG.md) - Version history and release notes
 
 
 ## Troubleshooting

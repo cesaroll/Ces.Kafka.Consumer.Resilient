@@ -34,6 +34,9 @@ public static class ServiceCollectionExtensions
         // Register resilient consumer
         services.AddSingleton<IResilientKafkaConsumer<TMessage>, ResilientKafkaConsumer<TMessage>>();
 
+        // Register hosted service to auto-start the consumer
+        services.AddHostedService<ResilientKafkaConsumerHostedService<TMessage>>();
+
         return services;
     }
 
@@ -59,6 +62,9 @@ public static class ServiceCollectionExtensions
 
         // Register resilient consumer
         services.AddSingleton<IResilientKafkaConsumer<TMessage>, ResilientKafkaConsumer<TMessage>>();
+
+        // Register hosted service to auto-start the consumer
+        services.AddHostedService<ResilientKafkaConsumerHostedService<TMessage>>();
 
         return services;
     }
