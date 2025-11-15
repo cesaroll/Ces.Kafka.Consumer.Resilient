@@ -32,7 +32,7 @@ public class OrderMessageHandler : IMessageHandler<OrderMessage>
         try
         {
             // Simulate processing
-            await Task.Delay(500, cancellationToken);
+            await Task.Delay(100, cancellationToken);
 
             // Simulate different scenarios for demonstration
             var scenario = _random.Next(0, 10);

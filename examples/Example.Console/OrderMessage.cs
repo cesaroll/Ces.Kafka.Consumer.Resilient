@@ -12,7 +12,7 @@ public class OrderMessage : ISpecificRecord
     public static Schema _SCHEMA = Schema.Parse(@"{
         ""type"": ""record"",
         ""name"": ""OrderMessage"",
-        ""namespace"": ""Example.ConsoleApp"",
+        ""namespace"": ""Example"",
         ""fields"": [
             {""name"": ""OrderId"", ""type"": ""string""},
             {""name"": ""CustomerId"", ""type"": ""string""},

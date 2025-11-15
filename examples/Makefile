@@ -10,6 +10,7 @@ help:
 	@echo "  make up-api            - Start all services including Example.Api consumer"
 	@echo "  make down              - Stop all services"
 	@echo "  make restart           - Restart all services"
+	@echo "  make restart-console   - Restart all services"
 	@echo "  make clean             - Stop services and remove volumes (fresh start)"
 	@echo "  make ps                - Show running containers"
 	@echo ""
@@ -77,6 +78,11 @@ restart:
 	@echo "🔄 Restarting services..."
 	docker-compose restart
 	@echo "✓ Services restarted!"
+
+restart-console:
+	@echo "🔄 Restarting console consumer..."
+	make build-console; docker-compose restart example-console
+	@echo "✓ Service restarted!"
 
 clean:
 	@echo "🧹 Cleaning up (removing volumes)..."
