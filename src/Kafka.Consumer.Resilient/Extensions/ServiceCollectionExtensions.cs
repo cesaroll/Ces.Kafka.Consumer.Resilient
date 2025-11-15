@@ -31,6 +31,11 @@ public static class ServiceCollectionExtensions
         // Register message handler
         services.AddScoped<IMessageHandler<TMessage>, THandler>();
 
+        // Register supporting services
+        services.AddSingleton<MessageDeserializer<TMessage>>();
+        services.AddSingleton<MessageRouter>();
+        services.AddSingleton<RetryPolicyManager>();
+
         // Register resilient consumer
         services.AddSingleton<IResilientKafkaConsumer<TMessage>, ResilientKafkaConsumer<TMessage>>();
 
@@ -59,6 +64,11 @@ public static class ServiceCollectionExtensions
 
         // Register message handler
         services.AddScoped<IMessageHandler<TMessage>, THandler>();
+
+        // Register supporting services
+        services.AddSingleton<MessageDeserializer<TMessage>>();
+        services.AddSingleton<MessageRouter>();
+        services.AddSingleton<RetryPolicyManager>();
 
         // Register resilient consumer
         services.AddSingleton<IResilientKafkaConsumer<TMessage>, ResilientKafkaConsumer<TMessage>>();

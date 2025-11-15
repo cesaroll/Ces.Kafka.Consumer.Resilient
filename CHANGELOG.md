@@ -2,6 +2,14 @@
 
 All notable changes to the Ces.Kafka.Consumer.Resilient project will be documented in this file.
 
+## [1.6.0] - 2025-11-14
+
+### Changed
+- **Fixes and refactoring
+- Refactored internal logic for better maintainability
+- Improved retry handling
+- Fix Retry groupId assignment logic
+
 ## [1.2.0] - 2025-11-14
 
 ### Changed

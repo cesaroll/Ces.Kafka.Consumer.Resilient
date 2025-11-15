@@ -44,20 +44,15 @@ public class ResilientKafkaConsumer<TMessage> : IResilientKafkaConsumer<TMessage
         var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _internalCts.Token);
 
         // Build list of topics with their consumer counts and delays
-        var topicConfigs = new List<(string TopicName, int ConsumerCount, string GroupId, TimeSpan? Delay)>();
+        var topicConfigs = new List<(string TopicName, int ConsumerCount, TimeSpan? Delay)>();
 
         // Add main topic
-        topicConfigs.Add((_configuration.TopicName, _configuration.ConsumerNumber, _configuration.GroupId, null));
+        topicConfigs.Add((_configuration.TopicName, _configuration.ConsumerNumber, null));
 
         // Add retry topics
         foreach (var retryTopic in _configuration.RetryPolicy.RetryTopics)
         {
-            topicConfigs.Add((
-                retryTopic.TopicName, 
-                retryTopic.ConsumerNumber,
-                retryTopic.GroupId ?? _configuration.GroupId,
-                retryTopic.GetDelayTimeSpan()
-                ));
+            topicConfigs.Add((retryTopic.TopicName, retryTopic.ConsumerNumber, retryTopic.GetDelayTimeSpan()));
         }
 
         _logger.LogInformation(
@@ -69,12 +64,12 @@ public class ResilientKafkaConsumer<TMessage> : IResilientKafkaConsumer<TMessage
 
         // Start consumers for each topic
         var globalConsumerId = 0;
-        foreach (var (topicName, consumerCount, groupId, delay) in topicConfigs)
+        foreach (var (topicName, consumerCount, delay) in topicConfigs)
         {
             for (int i = 0; i < consumerCount; i++)
             {
                 var consumerId = globalConsumerId++;
-                var task = Task.Run(() => ConsumeAsync(consumerId, topicName, groupId, delay, linkedCts.Token), linkedCts.Token);
+                var task = Task.Run(() => ConsumeAsync(consumerId, topicName, delay, linkedCts.Token), linkedCts.Token);
                 _consumerTasks.Add(task);
             }
         }
@@ -104,12 +99,12 @@ public class ResilientKafkaConsumer<TMessage> : IResilientKafkaConsumer<TMessage
         _logger.LogInformation("Kafka consumer stopped");
     }
 
-    private async Task ConsumeAsync(int consumerId, string topic, string groupId, TimeSpan? topicDelay, CancellationToken cancellationToken)
+    private async Task ConsumeAsync(int consumerId, string topic, TimeSpan? topicDelay, CancellationToken cancellationToken)
     {
         var consumerConfig = new ConsumerConfig
         {
             BootstrapServers = _configuration.BootstrapServers,
-            GroupId = groupId,
+            GroupId = _configuration.GroupId,
             AutoOffsetReset = AutoOffsetReset.Earliest,
             EnableAutoCommit = false,
             EnableAutoOffsetStore = false
@@ -270,11 +265,10 @@ public class ResilientKafkaConsumer<TMessage> : IResilientKafkaConsumer<TMessage
                 currentTopic,
                 consumeResult.Offset);
 
-            // TODO: Comeback to decide what to do in this case
             // On unexpected error, send to error topic
             await SendToErrorTopicAsync(producer, consumeResult, ex.Message, cancellationToken);
             consumer.StoreOffset(consumeResult);
-            consumer.Commit();
+            consumer.Commit(); //TODO: Do not commit on failure
         }
     }
 
@@ -518,7 +512,7 @@ public class ResilientKafkaConsumer<TMessage> : IResilientKafkaConsumer<TMessage
             if (now < processAfter)
             {
                 var delay = processAfter - now;
-                _logger.LogDebug(
+                _logger.LogInformation(
                     "Message from {Topic} at offset {Offset} not ready yet. Delaying for {Delay}",
                     consumeResult.Topic,
                     consumeResult.Offset,

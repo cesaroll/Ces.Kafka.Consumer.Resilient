@@ -27,6 +27,11 @@ public class RetryTopicConfiguration
     public string? GroupId { get; set; }
 
     /// <summary>
+    /// Number of concurrent consumers for this retry topic (default: 1)
+    /// </summary>
+    public int ConsumerNumber { get; set; } = 1;
+
+    /// <summary>
     /// Gets the delay as TimeSpan
     /// </summary>
     public TimeSpan GetDelayTimeSpan()
