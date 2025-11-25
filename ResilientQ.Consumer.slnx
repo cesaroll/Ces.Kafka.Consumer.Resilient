@@ -1,0 +1,20 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Kafka/">
+    <Project Path="Kafka/ResilientQ.Consumer.Kafka/ResilientQ.Consumer.Kafka.csproj" />
+  </Folder>
+  <Folder Name="/Kafka/examples/">
+    <Project Path="Kafka/examples/Example.Console/Example.Console.csproj" />
+    <Project Path="Kafka/examples/Weather.Consumer/Weather.Consumer.csproj" />
+    <Project Path="Kafka/examples/Weather.Contracts/Weather.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/Kafka/tests/">
+    <Project Path="Kafka/tests/ResilientQ.Consumer.Kafka.Tests.AppHost/ResilientQ.Consumer.Kafka.Tests.AppHost.csproj" />
+    <Project Path="Kafka/tests/ResilientQ.Consumer.Kafka.Tests.Integration/ResilientQ.Consumer.Kafka.Tests.Integration.csproj" />
+    <Project Path="Kafka/tests/ResilientQ.Consumer.Kafka.Tests.Unit/ResilientQ.Consumer.Kafka.Tests.Unit.csproj" />
+  </Folder>
+</Solution>
